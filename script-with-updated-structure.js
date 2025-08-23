@@ -1,9 +1,9 @@
-// == Generic Step-by-Step Form Tracker - Updated Structure ==
+// Stepper form Tracker for pcpclaim.pro
+
 (function () {
     // 1. CONFIGURATION
     const CONFIG = {
-        apiUrl: "http://localhost:3002/api/send-message", // Change to your backend URL
-        // apiUrl: "https://gateway.claim3000.uk/api/send-message", // Change to your backend URL
+        apiUrl: "https://gateway.claim3000.uk/api/send-stepper-form", 
         steps: [
             {
                 name: "address",
@@ -73,7 +73,6 @@
     // 4. SERVER SENDING - Updated Structure
     function sendToServer(data) {
         const payload = {
-            status: "used",
                 allFormData: {
                     referralId: savedReferral,
                     regNo: "", // Add vehicle registration if available
@@ -127,7 +126,6 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "api-key": "PC-ITF1TNN0CLAIM3000"
             },
             body: JSON.stringify(payload)
         })
