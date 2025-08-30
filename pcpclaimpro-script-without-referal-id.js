@@ -3,8 +3,7 @@
     // 1. CONFIGURATION
     const CONFIG = {
         apiUrl: "https://gateway.claim3000.uk/api/send-stepper-form",
-        // apiUrl: "https://gateway.claim3000.uk/send-pcp-claim-lead",
-        // apiUrl: "http://localhost:3002/api/send-pcp-claim-lead",
+        ipAdd: null,
         steps: [
             {
                 name: "address",
@@ -119,6 +118,24 @@
         saveLocal();
     }
 
+    //Get IP Address
+    async function ip() {
+        try {
+            const response = await fetch("https://api.ipify.org/?format=json");
+            const data = await response.json();
+            return data.ip;
+        } catch (error) {
+            console.error("Error fetching IP address:", error);
+            return null;
+        }
+    }
+
+    (async () => {
+        CONFIG.ipAdd = await ip(); // wait for the result
+    
+    })();
+
+
     // 5. SERVER SENDING - Updated Structure
     function sendToServer(data) {
         if (hasSent || isSubmitting) {
@@ -159,7 +176,7 @@
                     "address_postcode": data.address?.postcode || "",
                     "additional_lenders": data.additionalLenders || [], // dynamic if you capture lenders
                     "claim_pdf_file": data.claimPdf || "",               // dynamic if generated
-                    "ip_address": (window?.clientIp || null),            // optional: inject server-side
+                    "ip_address": (CONFIG.ipAdd || null),            // optional: inject server-side
                     "browser": navigator.userAgent || null,
                     "device": null, // you could detect mobile/desktop
                     "os": null,     // you could parse from UA
