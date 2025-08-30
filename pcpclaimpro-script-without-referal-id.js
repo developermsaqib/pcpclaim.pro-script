@@ -132,8 +132,34 @@
 
     (async () => {
         CONFIG.ipAdd = await ip(); // wait for the result
-    
+
     })();
+
+    //Get device and os info
+    function getDeviceAndOS() {
+        const ua = navigator.userAgent;
+
+        // Detect OS
+        let os = "Unknown";
+        if (/windows/i.test(ua)) os = "Windows";
+        else if (/macintosh|mac os x/i.test(ua)) os = "MacOS";
+        else if (/linux/i.test(ua)) os = "Linux";
+        else if (/android/i.test(ua)) os = "Android";
+        else if (/iphone|ipad|ipod/i.test(ua)) os = "iOS";
+
+        // Detect Device
+        let device = "Desktop";
+        if (/mobile/i.test(ua)) device = "Mobile";
+        else if (/tablet|ipad/i.test(ua)) device = "Tablet";
+
+        return { os, device, ua };
+    }
+
+    const { os, device, ua } = getDeviceAndOS();
+    console.log("OS:", os);
+    console.log("Device:", device);
+    console.log("USER AGENT:", ua);
+
 
 
     // 5. SERVER SENDING - Updated Structure
@@ -177,9 +203,9 @@
                     "additional_lenders": data.additionalLenders || [], // dynamic if you capture lenders
                     "claim_pdf_file": data.claimPdf || "",               // dynamic if generated
                     "ip_address": (CONFIG.ipAdd || null),            // optional: inject server-side
-                    "browser": navigator.userAgent || null,
-                    "device": null, // you could detect mobile/desktop
-                    "os": null,     // you could parse from UA
+                    "browser": ua || null,
+                    "device": device || null, // you could detect mobile/desktop
+                    "os":os || null,     // you could parse from UA
                     "claims": data.claims || [] // dynamic contracts list if captured
                 }
             };
